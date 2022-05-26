@@ -1,17 +1,14 @@
 FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/wf-base:fbe8-main
 
 #Install conda
-RUN curl -O \
-    https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && mkdir /root/.conda \
-    && bash Miniconda3-latest-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-latest-Linux-x86_64.sh
+RUN curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh --output miniconda.sh
+ENV CONDA_DIR /opt/conda
+RUN bash miniconda.sh -b -p /opt/conda
+ENV PATH=$CONDA_DIR/bin:$PATH
 # Install dependencies 
 RUN conda install -c bioconda parallel-fastq-dump &&\
     conda install -c bioconda blast &&\
     conda install -c kantorlab blastn
-# Clone the directory
-RUN git clone https://github.com/cguyeux/CRISPRbuilder-TB.git
 
 # Install CRISPRbuilder-TB
 RUN pip install crisprbuilder_tb
